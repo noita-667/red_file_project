@@ -1,0 +1,58 @@
+<div class="window-page">
+  <div class="window-box">
+    <div class="window-header"></div>
+
+    <div class="window-content text-center">
+      <h1 class="window-title">Configuration du nettoyage</h1>
+
+      <form class="mt-4 text-start" (ngSubmit)="appliquer()">
+        <div class="mb-3 row align-items-center">
+          <label class="col-sm-4 col-form-label">Type de nettoyage</label>
+          <div class="col-sm-8">
+            <select
+              class="form-select control-rounded"
+              [(ngModel)]="typeNettoyage"
+              name="typeNettoyage"
+            >
+              <option value="remplacer">Remplacer</option>
+              <option value="supprimer">Supprimer</option>
+              <option value="remplir">Remplir valeurs manquantes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label class="col-sm-4 col-form-label">Colonne</label>
+          <div class="col-sm-8">
+            <select
+              class="form-select control-rounded"
+              [(ngModel)]="colonne"
+              name="colonne"
+            >
+              <option value="prix">prix</option>
+              <option value="quantite">quantité</option>
+              <option value="age">age</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4 row align-items-center">
+          <label class="col-sm-4 col-form-label">Valeur par défaut</label>
+          <div class="col-sm-8">
+            <input
+              class="form-control control-rounded"
+              [(ngModel)]="valeurParDefaut"
+              name="valeurParDefaut"
+            />
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn window-button">
+            Appliquer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

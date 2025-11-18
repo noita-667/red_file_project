@@ -1,0 +1,50 @@
+<div class="login-page">
+  <div class="login-window">
+    <!-- On simule la "fenêtre" de navigateur de ta maquette 
+         avec une barre fine en haut -->
+    <div class="window-header"></div>
+
+    <div class="login-content">
+      <h1 class="login-title text-center">LOGIN</h1>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="username"
+            type="username"
+            class="form-control login-input"
+            name="username"
+            [(ngModel)]="username"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Mot de passe</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control login-input"
+            name="password"
+            [(ngModel)]="password"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-outline-dark w-100 login-button"
+          [disabled]="loginForm.invalid"
+        >
+          Se connecter
+        </button>
+      </form>
+
+      <div *ngIf="error" class="text-danger small mt-3 text-center">
+        {{ error }}
+      </div>
+    </div>
+  </div>
+</div>
+

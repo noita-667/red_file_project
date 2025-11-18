@@ -1,0 +1,38 @@
+<div class="window-page">
+  <div class="window-box">
+    <div class="window-header"></div>
+
+    <div class="window-content text-center">
+      <h1 class="window-title">Rapport d'analyse</h1>
+
+      <h2 class="window-subtitle">{{ table }}</h2>
+
+      <div class="row mt-4 justify-content-center">
+        <!-- Colonne de gauche : informations générales -->
+        <div class="col-md-5 text-start">
+          <p><strong>Informations générales</strong></p>
+          <p>Nombre de lignes : 12 543</p>
+          <p>Nombre de colonnes : 14</p>
+          <p>Colonne ID détectée : oui</p>
+        </div>
+
+        <!-- Colonne de droite : types cohérents -->
+        <div class="col-md-5 text-start">
+          <p><strong>Types cohérents</strong></p>
+          <ul class="mb-0">
+            <li>"age" / 77 : "lnegnnu"</li>
+            <li>Others detectés</li>
+            <li>amount : 00, 103, 105</li>
+          </ul>
+        </div>
+      </div>
+
+      <button
+        class="btn window-button mt-4"
+        (click)="nettoyer()"
+      >
+        Nettoyer les données
+      </button>
+    </div>
+  </div>
+</div>

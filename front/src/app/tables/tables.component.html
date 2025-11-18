@@ -1,0 +1,29 @@
+<div class="window-page">
+  <div class="window-box">
+    <div class="window-header"></div>
+
+    <div class="window-content text-center">
+      <h1 class="window-title">Tables disponibles</h1>
+
+      <div class="d-flex justify-content-center mt-4">
+        <!-- Liste à puces à gauche -->
+        <ul class="list-unstyled text-start me-4">
+          <li *ngFor="let t of tables" class="mb-3">• {{ t }}</li>
+        </ul>
+
+        <!-- Boutons à droite -->
+        <div class="btn-column text-start">
+          <button
+            *ngFor="let t of tables"
+            class="btn btn-outline-dark w-100 mb-3 window-button"
+            (click)="voirAnalyse(t)"
+          >
+            Voir analyse
+          </button>
+        </div>
+      </div>
+
+      <p class="mt-5">Chargement...</p>
+    </div>
+  </div>
+</div>
