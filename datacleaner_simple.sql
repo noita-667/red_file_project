@@ -9,9 +9,9 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL
 );
 
--- admin / 1234
+-- admin@admin.com / 1234
 INSERT INTO users (email, password_hash)
-VALUES ('admin', '$2b$12$K1QA2zGQqCmeqoYJxT9bqOLbh9y.k3V6uB3UYpFq0JGhFf3qWHLAm');
+VALUES ('admin@admin.com', '$2b$12$X6Xdo41/yTL3ELs5whdo6u2Rv1Mxq9iKRfX9PhIF0edvBlUU4V6MS');
 
 CREATE TABLE cleaning_logs (
     id         SERIAL       PRIMARY KEY,

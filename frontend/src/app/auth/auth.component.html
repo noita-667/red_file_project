@@ -40,9 +40,9 @@
         <button
           type="submit"
           class="btn btn-outline-dark w-100 login-button"
-          [disabled]="loginForm.invalid"
+          [disabled]="loginForm.invalid || loading"
         >
-          Se connecter
+          {{ loading ? 'Connexion...' : 'Se connecter' }}
         </button>
       </form>
 

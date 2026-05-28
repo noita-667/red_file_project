@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cleaning',
@@ -17,11 +17,15 @@ export class CleaningComponent {
   colonne = 'prix';
   valeurParDefaut = '0';
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     const param = this.route.snapshot.paramMap.get('table');
     if (param) {
       this.table = param;
     }
+  }
+
+  retourTables() {
+    this.router.navigate(['/tables']);
   }
 
   appliquer() {
