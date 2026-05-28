@@ -14,13 +14,9 @@ import { CleaningService } from './cleaning.service';
 export class CleaningComponent {
   table = 'inconnue';
 
-  typeOperation = 'fill_missing';
-
+  typeNettoyage = 'remplacer';
   colonne = '';
-
-  methode = 'mean';
-
-  typeTarget = 'int';
+  valeurParDefaut = '0';
 
   loading = false;
   message = '';
@@ -42,22 +38,11 @@ export class CleaningComponent {
   appliquer() {
     const rules: any = { table: this.table };
 
-    if (this.typeOperation === 'fill_missing') {
-      if (!this.colonne.trim()) {
-        this.message = 'Veuillez entrer un nom de colonne.';
-        this.messageType = 'error';
-        return;
-      }
-      rules.fill_missing = { [this.colonne.trim()]: this.methode };
-    } else if (this.typeOperation === 'remove_duplicates') {
+    if (this.typeNettoyage === 'supprimer') {
       rules.remove_duplicates = true;
-    } else if (this.typeOperation === 'fix_types') {
-      if (!this.colonne.trim()) {
-        this.message = 'Veuillez entrer un nom de colonne.';
-        this.messageType = 'error';
-        return;
-      }
-      rules.fix_types = { [this.colonne.trim()]: this.typeTarget };
+    } else {
+      // "remplacer" et "remplir" → remplir la colonne avec la valeur par défaut
+      rules.fill_value = { [this.colonne]: this.valeurParDefaut };
     }
 
     this.loading = true;

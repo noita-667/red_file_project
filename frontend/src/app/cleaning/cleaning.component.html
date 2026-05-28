@@ -4,64 +4,43 @@
 
     <div class="window-content text-center">
       <h1 class="window-title">Configuration du nettoyage</h1>
-      <p class="text-muted small">Table : <strong>{{ table }}</strong></p>
 
       <form class="mt-4 text-start" (ngSubmit)="appliquer()">
-
         <div class="mb-3 row align-items-center">
-          <label class="col-sm-4 col-form-label">Opération</label>
+          <label class="col-sm-4 col-form-label">Type de nettoyage</label>
           <div class="col-sm-8">
             <select
               class="form-select control-rounded"
-              [(ngModel)]="typeOperation"
-              name="typeOperation"
+              [(ngModel)]="typeNettoyage"
+              name="typeNettoyage"
             >
-              <option value="fill_missing">Remplir valeurs manquantes</option>
-              <option value="remove_duplicates">Supprimer les doublons</option>
-              <option value="fix_types">Corriger les types</option>
+              <option value="remplacer">Remplacer</option>
+              <option value="supprimer">Supprimer</option>
+              <option value="remplir">Remplir valeurs manquantes</option>
             </select>
           </div>
         </div>
 
-        <div class="mb-3 row align-items-center" *ngIf="typeOperation !== 'remove_duplicates'">
+        <div class="mb-3 row align-items-center" *ngIf="typeNettoyage !== 'supprimer'">
           <label class="col-sm-4 col-form-label">Colonne</label>
           <div class="col-sm-8">
             <input
               class="form-control control-rounded"
               [(ngModel)]="colonne"
               name="colonne"
-              placeholder="ex: prix"
+              placeholder="ex: prix, age, montant..."
             />
           </div>
         </div>
 
-        <div class="mb-4 row align-items-center" *ngIf="typeOperation === 'fill_missing'">
-          <label class="col-sm-4 col-form-label">Méthode</label>
+        <div class="mb-4 row align-items-center" *ngIf="typeNettoyage !== 'supprimer'">
+          <label class="col-sm-4 col-form-label">Valeur par défaut</label>
           <div class="col-sm-8">
-            <select
-              class="form-select control-rounded"
-              [(ngModel)]="methode"
-              name="methode"
-            >
-              <option value="mean">Moyenne</option>
-              <option value="median">Médiane</option>
-              <option value="mode">Mode</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="mb-4 row align-items-center" *ngIf="typeOperation === 'fix_types'">
-          <label class="col-sm-4 col-form-label">Type cible</label>
-          <div class="col-sm-8">
-            <select
-              class="form-select control-rounded"
-              [(ngModel)]="typeTarget"
-              name="typeTarget"
-            >
-              <option value="int">Entier (int)</option>
-              <option value="float">Décimal (float)</option>
-              <option value="str">Texte (str)</option>
-            </select>
+            <input
+              class="form-control control-rounded"
+              [(ngModel)]="valeurParDefaut"
+              name="valeurParDefaut"
+            />
           </div>
         </div>
 
@@ -84,7 +63,6 @@
             {{ loading ? 'En cours...' : 'Appliquer' }}
           </button>
         </div>
-
       </form>
     </div>
   </div>

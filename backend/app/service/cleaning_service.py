@@ -12,6 +12,15 @@ def clean_data(table: str, rules: dict, db: Session) -> dict:
     engine = get_engine()
     df = pd.read_sql(f'SELECT * FROM "{table}"', engine)
 
+    if rules.get("fill_value"):
+        for col, val in rules["fill_value"].items():
+            if col not in df.columns: continue
+            try:
+                typed_val = float(val) if df[col].dtype != "object" else val
+            except (ValueError, TypeError):
+                typed_val = val
+            df[col] = df[col].fillna(typed_val)
+
     if rules.get("fill_missing"):
         for col, method in rules["fill_missing"].items():
             if col not in df.columns: continue
