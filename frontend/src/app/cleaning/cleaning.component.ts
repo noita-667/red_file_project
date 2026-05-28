@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CleaningService } from './cleaning.service';
 
 @Component({
   selector: 'app-cleaning',
@@ -13,15 +14,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CleaningComponent {
   table = 'inconnue';
 
-  typeNettoyage = 'remplacer';
-  colonne = 'prix';
-  valeurParDefaut = '0';
+  typeOperation = 'fill_missing';
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  colonne = '';
+
+  methode = 'mean';
+
+  typeTarget = 'int';
+
+  loading = false;
+  message = '';
+  messageType: 'success' | 'error' | '' = '';
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private cleaningService: CleaningService
+  ) {
     const param = this.route.snapshot.paramMap.get('table');
-    if (param) {
-      this.table = param;
-    }
+    if (param) this.table = param;
   }
 
   retourTables() {
@@ -29,11 +40,40 @@ export class CleaningComponent {
   }
 
   appliquer() {
-    alert(
-      `Nettoyage appliqué sur ${this.table} :\n` +
-      `Type = ${this.typeNettoyage}\n` +
-      `Colonne = ${this.colonne}\n` +
-      `Valeur par défaut = ${this.valeurParDefaut}`
-    );
+    const rules: any = { table: this.table };
+
+    if (this.typeOperation === 'fill_missing') {
+      if (!this.colonne.trim()) {
+        this.message = 'Veuillez entrer un nom de colonne.';
+        this.messageType = 'error';
+        return;
+      }
+      rules.fill_missing = { [this.colonne.trim()]: this.methode };
+    } else if (this.typeOperation === 'remove_duplicates') {
+      rules.remove_duplicates = true;
+    } else if (this.typeOperation === 'fix_types') {
+      if (!this.colonne.trim()) {
+        this.message = 'Veuillez entrer un nom de colonne.';
+        this.messageType = 'error';
+        return;
+      }
+      rules.fix_types = { [this.colonne.trim()]: this.typeTarget };
+    }
+
+    this.loading = true;
+    this.message = '';
+
+    this.cleaningService.clean(rules).subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.message = `Nettoyage réussi — ${res.rows_after_cleaning} lignes après traitement.`;
+        this.messageType = 'success';
+      },
+      error: (err) => {
+        this.loading = false;
+        this.message = err.error?.detail || 'Erreur lors du nettoyage.';
+        this.messageType = 'error';
+      },
+    });
   }
 }

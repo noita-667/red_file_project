@@ -5,25 +5,40 @@
     <div class="window-content text-center">
       <h1 class="window-title">Tables disponibles</h1>
 
-      <div class="d-flex justify-content-center mt-4">
-        <!-- Liste à puces à gauche -->
+      <p *ngIf="loading" class="mt-4 text-muted">Chargement...</p>
+
+      <p *ngIf="error" class="mt-4 text-danger small">{{ error }}</p>
+
+      <div *ngIf="!loading && !error" class="d-flex justify-content-center mt-4">
+
+        <!-- Noms des tables -->
         <ul class="list-unstyled text-start me-4">
           <li *ngFor="let t of tables" class="mb-3">• {{ t }}</li>
         </ul>
 
-        <!-- Boutons à droite -->
         <div class="btn-column text-start">
-          <button
-            *ngFor="let t of tables"
-            class="btn btn-outline-dark w-100 mb-3 window-button"
-            (click)="voirAnalyse(t)"
-          >
-            Voir analyse
-          </button>
+          <div *ngFor="let t of tables" class="d-flex gap-2 mb-3">
+            <button
+              class="btn btn-outline-dark window-button"
+              (click)="voirAnalyse(t)"
+            >
+              Voir analyse
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              (click)="voirCleaning(t)"
+            >
+              Nettoyer
+            </button>
+          </div>
         </div>
+
       </div>
 
-      <p class="mt-5">Chargement...</p>
+      <p *ngIf="!loading && !error && tables.length === 0" class="mt-4 text-muted">
+        Aucune table disponible.
+      </p>
+
     </div>
   </div>
 </div>

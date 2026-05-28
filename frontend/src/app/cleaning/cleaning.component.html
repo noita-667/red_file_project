@@ -4,57 +4,87 @@
 
     <div class="window-content text-center">
       <h1 class="window-title">Configuration du nettoyage</h1>
+      <p class="text-muted small">Table : <strong>{{ table }}</strong></p>
 
       <form class="mt-4 text-start" (ngSubmit)="appliquer()">
+
         <div class="mb-3 row align-items-center">
-          <label class="col-sm-4 col-form-label">Type de nettoyage</label>
+          <label class="col-sm-4 col-form-label">Opération</label>
           <div class="col-sm-8">
             <select
               class="form-select control-rounded"
-              [(ngModel)]="typeNettoyage"
-              name="typeNettoyage"
+              [(ngModel)]="typeOperation"
+              name="typeOperation"
             >
-              <option value="remplacer">Remplacer</option>
-              <option value="supprimer">Supprimer</option>
-              <option value="remplir">Remplir valeurs manquantes</option>
+              <option value="fill_missing">Remplir valeurs manquantes</option>
+              <option value="remove_duplicates">Supprimer les doublons</option>
+              <option value="fix_types">Corriger les types</option>
             </select>
           </div>
         </div>
 
-        <div class="mb-3 row align-items-center">
+        <div class="mb-3 row align-items-center" *ngIf="typeOperation !== 'remove_duplicates'">
           <label class="col-sm-4 col-form-label">Colonne</label>
-          <div class="col-sm-8">
-            <select
-              class="form-select control-rounded"
-              [(ngModel)]="colonne"
-              name="colonne"
-            >
-              <option value="prix">prix</option>
-              <option value="quantite">quantité</option>
-              <option value="age">age</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="mb-4 row align-items-center">
-          <label class="col-sm-4 col-form-label">Valeur par défaut</label>
           <div class="col-sm-8">
             <input
               class="form-control control-rounded"
-              [(ngModel)]="valeurParDefaut"
-              name="valeurParDefaut"
+              [(ngModel)]="colonne"
+              name="colonne"
+              placeholder="ex: prix"
             />
           </div>
+        </div>
+
+        <div class="mb-4 row align-items-center" *ngIf="typeOperation === 'fill_missing'">
+          <label class="col-sm-4 col-form-label">Méthode</label>
+          <div class="col-sm-8">
+            <select
+              class="form-select control-rounded"
+              [(ngModel)]="methode"
+              name="methode"
+            >
+              <option value="mean">Moyenne</option>
+              <option value="median">Médiane</option>
+              <option value="mode">Mode</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4 row align-items-center" *ngIf="typeOperation === 'fix_types'">
+          <label class="col-sm-4 col-form-label">Type cible</label>
+          <div class="col-sm-8">
+            <select
+              class="form-select control-rounded"
+              [(ngModel)]="typeTarget"
+              name="typeTarget"
+            >
+              <option value="int">Entier (int)</option>
+              <option value="float">Décimal (float)</option>
+              <option value="str">Texte (str)</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          *ngIf="message"
+          class="mb-3 text-center small"
+          [ngClass]="{
+            'text-success': messageType === 'success',
+            'text-danger': messageType === 'error'
+          }"
+        >
+          {{ message }}
         </div>
 
         <div class="text-center d-flex justify-content-center gap-2">
           <button type="button" class="btn btn-outline-secondary" (click)="retourTables()">
             ← Retour aux tables
           </button>
-          <button type="submit" class="btn window-button">
-            Appliquer
+          <button type="submit" class="btn window-button" [disabled]="loading">
+            {{ loading ? 'En cours...' : 'Appliquer' }}
           </button>
         </div>
+
       </form>
     </div>
   </div>
