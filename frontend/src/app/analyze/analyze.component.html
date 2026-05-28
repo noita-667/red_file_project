@@ -4,35 +4,56 @@
 
     <div class="window-content text-center">
       <h1 class="window-title">Rapport d'analyse</h1>
-
       <h2 class="window-subtitle">{{ table }}</h2>
 
-      <div class="row mt-4 justify-content-center">
-        <!-- Colonne de gauche : informations générales -->
-        <div class="col-md-5 text-start">
-          <p><strong>Informations générales</strong></p>
-          <p>Nombre de lignes : 12 543</p>
-          <p>Nombre de colonnes : 14</p>
-          <p>Colonne ID détectée : oui</p>
+      <!-- Chargement -->
+      <p *ngIf="loading" class="mt-4 text-muted">Analyse en cours...</p>
+
+      <!-- Erreur -->
+      <p *ngIf="error" class="mt-4 text-danger small">{{ error }}</p>
+
+      <!-- Résultats -->
+      <div *ngIf="result" class="row mt-4 justify-content-center text-start">
+
+        <!-- Colonne gauche : valeurs manquantes + doublons -->
+        <div class="col-md-5">
+          <p><strong>Valeurs manquantes</strong></p>
+          <p *ngIf="missingEntries.length === 0" class="text-success small">Aucune valeur manquante ✓</p>
+          <ul *ngIf="missingEntries.length > 0" class="small">
+            <li *ngFor="let e of missingEntries">
+              <strong>{{ e[0] }}</strong> : {{ e[1] }} manquante(s)
+            </li>
+          </ul>
+
+          <p class="mt-3"><strong>Doublons</strong></p>
+          <p class="small" [class.text-success]="result.duplicates === 0" [class.text-warning]="result.duplicates > 0">
+            {{ result.duplicates === 0 ? 'Aucun doublon ✓' : result.duplicates + ' doublon(s) détecté(s)' }}
+          </p>
         </div>
 
-        <!-- Colonne de droite : types cohérents -->
-        <div class="col-md-5 text-start">
-          <p><strong>Types cohérents</strong></p>
-          <ul class="mb-0">
-            <li>"age" / 77 : "lnegnnu"</li>
-            <li>Others detectés</li>
-            <li>amount : 00, 103, 105</li>
+        <!-- Colonne droite : anomalies de types -->
+        <div class="col-md-5">
+          <p><strong>Anomalies de types</strong></p>
+          <p *ngIf="anomalyEntries.length === 0" class="text-success small">Aucune anomalie ✓</p>
+          <ul *ngIf="anomalyEntries.length > 0" class="small">
+            <li *ngFor="let e of anomalyEntries">
+              <strong>{{ e[0] }}</strong> : {{ e[1].join(', ') }}
+            </li>
           </ul>
         </div>
+
       </div>
 
-      <button
-        class="btn window-button mt-4"
-        (click)="nettoyer()"
-      >
-        Nettoyer les données
-      </button>
+      <!-- Boutons -->
+      <div *ngIf="result" class="d-flex justify-content-center gap-2 mt-4">
+        <button class="btn btn-outline-secondary" (click)="retourTables()">
+          ← Retour aux tables
+        </button>
+        <button class="btn window-button" (click)="nettoyer()">
+          Nettoyer les données
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

@@ -10,7 +10,8 @@ def clean_data(table: str, rules: dict, db: Session) -> dict:
         return {"status": "error", "detail": f"Table système '{table}' protégée."}
 
     engine = get_engine()
-    df = pd.read_sql(f'SELECT * FROM "{table}"', engine)
+    with engine.connect() as conn:
+        df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
 
     if rules.get("fill_value"):
         for col, val in rules["fill_value"].items():
@@ -41,7 +42,8 @@ def clean_data(table: str, rules: dict, db: Session) -> dict:
                 elif dtype == "str":   df[col] = df[col].astype(str)
             except: pass
 
-    df.to_sql(table, engine, if_exists="replace", index=False)
+    with engine.begin() as conn:
+        df.to_sql(table, con=conn, if_exists="replace", index=False)
 
     db.add(CleaningLog(table_name=table))
     db.commit()

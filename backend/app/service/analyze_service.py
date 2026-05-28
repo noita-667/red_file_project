@@ -5,7 +5,8 @@ from app.models.models import AnalysisReport
 
 
 def load_table(name: str) -> pd.DataFrame:
-    return pd.read_sql(f'SELECT * FROM "{name}"', get_engine())
+    with get_engine().connect() as conn:
+        return pd.read_sql(f'SELECT * FROM "{name}"', conn)
 
 def detect_missing(df): return df.isnull().sum().to_dict()
 def detect_duplicates(df): return int(df.duplicated().sum())
