@@ -4,7 +4,6 @@ from app.services.auth_service import verify_credentials
 
 router = APIRouter()
 
-# vérification login + création token
 @router.post("/login")
 def login(data: Login):
     if verify_credentials(data.email, data.password):

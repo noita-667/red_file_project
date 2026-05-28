@@ -8,14 +8,12 @@ def clean_data(table: str, rules: dict):
     # On charge la table SQL dans un DataFrame
     df = pd.read_sql(f"SELECT * FROM {table}", engine)
 
-    # --- 1. Gestion des valeurs manquantes ---
     if rules.get("fill_missing"):
         for col, method in rules["fill_missing"].items():
 
             if col not in df.columns:
                 continue  # sécurité
 
-            # Si colonne non numérique : on ignore
             if df[col].dtype == "object" and method in ["mean", "median"]:
                 continue
 
@@ -29,11 +27,9 @@ def clean_data(table: str, rules: dict):
                 if not df[col].mode().empty:
                     df[col] = df[col].fillna(df[col].mode().iloc[0])
 
-    # --- 2. Suppression des doublons ---
     if rules.get("remove_duplicates"):
         df = df.drop_duplicates()
 
-    # --- 3. Correction types (optionnel) ---
     if "fix_types" in rules and rules["fix_types"]:
         for col, dtype in rules["fix_types"].items():
             try:
@@ -44,13 +40,11 @@ def clean_data(table: str, rules: dict):
                 elif dtype == "str":
                     df[col] = df[col].astype(str)
             except Exception:
-                pass  # on ignore les erreurs pour éviter un crash
+                pass
 
-    # Sécurité : interdit d’écraser la table des erreurs
     if table == "erreurs":
         return {"status": "error", "detail": "Impossible de nettoyer la table 'erreurs'."}
 
-    # On remplace le contenu de la table avec les nouvelles données
     df.to_sql(table, engine, if_exists="replace", index=False)
 
     return {

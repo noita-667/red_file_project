@@ -18,11 +18,10 @@ def analyze(table: str):
         "outliers": detect_outliers(df)
     }
 
-#  Analyse toutes les tables !
 @router.get("/analyze/all")
 def analyze_all():
     results = {}
-    tables = list_tables()  # récupère toutes les tables réelles dans MySQL
+    tables = list_tables()
 
     for table in tables:
         df = load_table(table)
