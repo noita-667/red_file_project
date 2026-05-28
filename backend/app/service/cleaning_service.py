@@ -5,14 +5,13 @@ from app.database import get_engine
 def clean_data(table: str, rules: dict):
     engine = get_engine()
 
-    # On charge la table SQL dans un DataFrame
     df = pd.read_sql(f"SELECT * FROM {table}", engine)
 
     if rules.get("fill_missing"):
         for col, method in rules["fill_missing"].items():
 
             if col not in df.columns:
-                continue  # sécurité
+                continue
 
             if df[col].dtype == "object" and method in ["mean", "median"]:
                 continue

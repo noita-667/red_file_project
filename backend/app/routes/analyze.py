@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.services.analyze_service import (
     load_table, detect_missing, detect_duplicates,
-    detect_type_anomalies, detect_outliers
+    detect_type_anomalies
 )
 from app.services.table_service import list_tables
 
@@ -14,8 +14,7 @@ def analyze(table: str):
         "table": table,
         "missing_values": detect_missing(df),
         "duplicates": detect_duplicates(df),
-        "datatype_anomalies": detect_type_anomalies(df),
-        "outliers": detect_outliers(df)
+        "datatype_anomalies": detect_type_anomalies(df)
     }
 
 @router.get("/analyze/all")
@@ -28,8 +27,7 @@ def analyze_all():
         results[table] = {
             "missing_values": detect_missing(df),
             "duplicates": detect_duplicates(df),
-            "datatype_anomalies": detect_type_anomalies(df),
-            "outliers": detect_outliers(df)
+            "datatype_anomalies": detect_type_anomalies(df)
         }
 
     return results
