@@ -18,11 +18,20 @@ export class AuthComponent {
 
   constructor(private router: Router) {}
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   onLogin() {
+    if (!this.isValidEmail(this.username)) {
+      this.error = 'Veuillez entrer une adresse email valide.';
+      return;
+    }
     // Auth très simple pour le moment (pas de back)
-    if (this.username === 'admin' && this.password === '1234') {
+    if (this.username === 'admin@admin.com' && this.password === '1234') {
       localStorage.setItem('isAuthenticated', 'true');
-      this.router.navigate(['/tables']); // ou '/tables' dans ton futur projet
+      this.router.navigate(['/tables']);
     } else {
       this.error = 'Identifiants incorrects';
     }

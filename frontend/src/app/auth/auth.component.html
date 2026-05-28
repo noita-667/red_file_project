@@ -11,13 +11,18 @@
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
-            id="username"
-            type="username"
+            id="email"
+            type="email"
             class="form-control login-input"
             name="username"
             [(ngModel)]="username"
             required
+            email
+            #emailField="ngModel"
           />
+          <div *ngIf="emailField.invalid && emailField.touched" class="text-danger small mt-1">
+            Veuillez entrer une adresse email valide.
+          </div>
         </div>
 
         <div class="mb-3">
