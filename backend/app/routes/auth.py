@@ -7,5 +7,5 @@ router = APIRouter()
 @router.post("/login")
 def login(data: Login):
     if verify_credentials(data.email, data.password):
-        return {"token": "fake-jwt-token"}
+        return {"token": "fake-token"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
