@@ -1,39 +1,34 @@
 import pandas as pd
+from sqlalchemy.orm import Session
 from app.database import get_engine
-from sklearn.ensemble import IsolationForest
+from app.models.models import AnalysisReport
 
 
-def load_table(name: str):
-    engine = get_engine()
-    return pd.read_sql(f"SELECT * FROM {name}", engine)
+def load_table(name: str) -> pd.DataFrame:
+    return pd.read_sql(f'SELECT * FROM "{name}"', get_engine())
 
-
-def detect_missing(df):
-    return df.isnull().sum().to_dict()
-
-
-def detect_duplicates(df):
-    return int(df.duplicated().sum())
-
+def detect_missing(df): return df.isnull().sum().to_dict()
+def detect_duplicates(df): return int(df.duplicated().sum())
 
 def detect_type_anomalies(df):
     anomalies = {}
-
-    for col in df.columns:
-        if df[col].dtype in ["object"]:
-            continue
-
-        errors = []
-
-        for val in df[col]:
-            try:
-                if pd.isna(val):
-                    continue
-                float(val)
-            except:
-                errors.append(val)
-
-        if errors:
-            anomalies[col] = list(set(errors))
-
+    for col in df.select_dtypes(exclude="object").columns:
+        errors = [v for v in df[col] if not pd.isna(v) and not _is_numeric(v)]
+        if errors: anomalies[col] = list(set(errors))
     return anomalies
+
+def _is_numeric(v):
+    try: float(v); return True
+    except: return False
+
+def run_analysis(table: str) -> dict:
+    df = load_table(table)
+    return {
+        "missing_values":     detect_missing(df),
+        "duplicates":         detect_duplicates(df),
+        "datatype_anomalies": detect_type_anomalies(df),
+    }
+
+def save_analysis(table: str, result: dict, db: Session):
+    db.add(AnalysisReport(table_name=table, **result))
+    db.commit()

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.services.table_service import list_tables
+from app.service.table_service import list_tables
 
 router = APIRouter()
 

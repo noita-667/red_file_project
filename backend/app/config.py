@@ -1,1 +1,1 @@
-DATABASE_URL = "mysql+mysqlconnector://root:password@localhost:3306/datacleaner"
+DATABASE_URL = "postgresql+psycopg2://postgres:password@localhost:5432/datacleaner"

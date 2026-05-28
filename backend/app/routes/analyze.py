@@ -1,33 +1,25 @@
-from fastapi import APIRouter
-from app.services.analyze_service import (
-    load_table, detect_missing, detect_duplicates,
-    detect_type_anomalies
-)
-from app.services.table_service import list_tables
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from app.service.analyze_service import run_analysis, save_analysis
+from app.service.table_service import list_tables
+from app.database import get_db
 
 router = APIRouter()
 
+
 @router.get("/analyze")
-def analyze(table: str):
-    df = load_table(table)
-    return {
-        "table": table,
-        "missing_values": detect_missing(df),
-        "duplicates": detect_duplicates(df),
-        "datatype_anomalies": detect_type_anomalies(df)
-    }
+def analyze(table: str, db: Session = Depends(get_db)):
+    result = run_analysis(table)
+    save_analysis(table, result, db)
+    return {"table": table, **result}
+
 
 @router.get("/analyze/all")
-def analyze_all():
+def analyze_all(db: Session = Depends(get_db)):
     results = {}
-    tables = list_tables()
-
-    for table in tables:
-        df = load_table(table)
-        results[table] = {
-            "missing_values": detect_missing(df),
-            "duplicates": detect_duplicates(df),
-            "datatype_anomalies": detect_type_anomalies(df)
-        }
-
+    for table in list_tables():
+        result = run_analysis(table)
+        save_analysis(table, result, db)
+        results[table] = result
     return results

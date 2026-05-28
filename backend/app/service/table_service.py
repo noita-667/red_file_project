@@ -1,6 +1,7 @@
 from sqlalchemy import inspect
 from app.database import get_engine
 
-def list_tables():
-    inspector = inspect(get_engine())
-    return inspector.get_table_names()
+SYSTEM_TABLES = {"users", "cleaning_logs", "analysis_reports"}
+
+def list_tables() -> list[str]:
+    return [t for t in inspect(get_engine()).get_table_names() if t not in SYSTEM_TABLES]
