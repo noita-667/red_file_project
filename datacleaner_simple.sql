@@ -16,52 +16,67 @@ VALUES ('admin@admin.com', '$2b$12$X6Xdo41/yTL3ELs5whdo6u2Rv1Mxq9iKRfX9PhIF0edvB
 -- ── Tables de données utilisateur ──────────────────────────────────────────
 
 CREATE TABLE clients (
-    id     SERIAL PRIMARY KEY,
-    nom    VARCHAR(100),
-    age    INTEGER,
-    email  VARCHAR(255),
-    ville  VARCHAR(100)
+    id        SERIAL PRIMARY KEY,
+    nom       VARCHAR(100),
+    age       INTEGER,
+    email     VARCHAR(255),
+    ville     VARCHAR(100),
+    telephone VARCHAR(20)
 );
 
-INSERT INTO clients (nom, age, email, ville) VALUES
-('Alice',  28,   'alice@mail.com',   'Paris'),
-('Bob',    NULL, 'bob@mail.com',     'Lyon'),
-('Alice',  28,   'alice@mail.com',   'Paris'),
-('Claire', 35,   NULL,               'Marseille'),
-('David',  NULL, 'david@mail.com',   'Bordeaux'),
-('Eva',    42,   'eva@mail.com',     NULL);
+INSERT INTO clients (nom, age, email, ville, telephone) VALUES
+('Alice',   28,   'alice@mail.com',   'Paris',      '0612345678'),
+('Bob',     NULL, 'bob@mail.com',     'Lyon',       '06-INVALIDE'),
+('Alice',   28,   'alice@mail.com',   'Paris',      '0612345678'),
+('Alice',   28,   'alice@mail.com',   'Paris',      '0612345678'),
+('Claire',  35,   NULL,               'Marseille',  'non renseigné'),
+('David',   NULL, 'david@mail.com',   'Bordeaux',   '0698765432'),
+('Eva',     42,   'eva@mail.com',     NULL,          NULL),
+('Frank',   NULL, NULL,               'Nantes',     'ABCD-1234'),
+('Grace',   29,   'grace@mail.com',   'Toulouse',   '0711223344'),
+('Grace',   29,   'grace@mail.com',   'Toulouse',   '0711223344');
 
 CREATE TABLE ventes (
     id         SERIAL PRIMARY KEY,
     produit    VARCHAR(100),
     quantite   INTEGER,
     prix       NUMERIC(10,2),
-    vendeur    VARCHAR(100)
+    vendeur    VARCHAR(100),
+    code_promo VARCHAR(20)
 );
 
-INSERT INTO ventes (produit, quantite, prix, vendeur) VALUES
-('Chaise',   10,   49.99,  'Martin'),
-('Table',    NULL, 199.99, 'Dupont'),
-('Lampe',    5,    NULL,   'Martin'),
-('Chaise',   10,   49.99,  'Martin'),
-('Bureau',   NULL, 349.00, NULL),
-('Canapé',   2,    799.99, 'Durand');
+INSERT INTO ventes (produit, quantite, prix, vendeur, code_promo) VALUES
+('Chaise',  10,   49.99,  'Martin', '10'),
+('Table',   NULL, 199.99, 'Dupont', '20'),
+('Lampe',   5,    NULL,   'Martin', 'GRATUIT'),
+('Chaise',  10,   49.99,  'Martin', '10'),
+('Chaise',  10,   49.99,  'Martin', '10'),
+('Bureau',  NULL, 349.00, NULL,     NULL),
+('Canapé',  2,    799.99, 'Durand', '5'),
+('Étagère', NULL, NULL,   'Dupont', 'N/A'),
+('Miroir',  3,    89.99,  NULL,     '15'),
+('Miroir',  3,    89.99,  NULL,     '15');
 
 CREATE TABLE transactions (
     id          SERIAL PRIMARY KEY,
     client_id   INTEGER,
     montant     NUMERIC(10,2),
     statut      VARCHAR(50),
-    date_op     DATE
+    date_op     DATE,
+    reference   VARCHAR(30)
 );
 
-INSERT INTO transactions (client_id, montant, statut, date_op) VALUES
-(1,    120.00, 'validé',   '2024-01-10'),
-(2,    NULL,   'en_attente','2024-01-11'),
-(1,    120.00, 'validé',   '2024-01-10'),
-(3,    450.50, NULL,       '2024-01-12'),
-(NULL, 89.00,  'validé',   '2024-01-13'),
-(4,    NULL,   'annulé',   NULL);
+INSERT INTO transactions (client_id, montant, statut, date_op, reference) VALUES
+(1,    120.00, 'validé',    '2024-01-10', '1001'),
+(2,    NULL,   'en_attente','2024-01-11', '1002'),
+(1,    120.00, 'validé',    '2024-01-10', '1001'),
+(1,    120.00, 'validé',    '2024-01-10', '1001'),
+(3,    450.50, NULL,        '2024-01-12', 'REF-ERREUR'),
+(NULL, 89.00,  'validé',    '2024-01-13', '1004'),
+(4,    NULL,   'annulé',    NULL,         '1005'),
+(5,    230.00, 'validé',    '2024-01-14', 'MANQUANT'),
+(6,    75.00,  NULL,        '2024-01-15', '1007'),
+(6,    75.00,  NULL,        '2024-01-15', '1007');
 
 -- ── Tables système ───────────────────────────────────────────────────────────
 

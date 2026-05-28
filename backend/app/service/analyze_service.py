@@ -9,17 +9,27 @@ def load_table(name: str) -> pd.DataFrame:
         return pd.read_sql(f'SELECT * FROM "{name}"', conn)
 
 def detect_missing(df): return df.isnull().sum().to_dict()
-def detect_duplicates(df): return int(df.duplicated().sum())
+def detect_duplicates(df):
+    cols = [c for c in df.columns if c != 'id']
+    return int(df.duplicated(subset=cols).sum())
 
 def detect_type_anomalies(df):
     anomalies = {}
-    for col in df.select_dtypes(exclude="object").columns:
-        errors = [v for v in df[col] if not pd.isna(v) and not _is_numeric(v)]
-        if errors: anomalies[col] = list(set(errors))
+    # Vérifie les colonnes texte (VARCHAR) qui contiennent des valeurs mixtes
+    for col in df.select_dtypes(include="object").columns:
+        non_null = df[col].dropna().astype(str)
+        if non_null.empty:
+            continue
+        numeric_count = non_null.apply(_is_numeric).sum()
+        # Anomalie si la colonne a des valeurs numériques ET non-numériques mélangées
+        if 0 < numeric_count < len(non_null):
+            bad_vals = [v for v in non_null if not _is_numeric(v)]
+            if bad_vals:
+                anomalies[col] = list(set(bad_vals))
     return anomalies
 
 def _is_numeric(v):
-    try: float(v); return True
+    try: float(str(v)); return True
     except: return False
 
 def run_analysis(table: str) -> dict:
