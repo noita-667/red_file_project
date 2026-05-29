@@ -4,6 +4,7 @@ import { TablesComponent } from './tables/tables.component';
 import { AnalyzeComponent } from './analyze/analyze.component';
 import { CleaningComponent } from './cleaning/cleaning.component';
 import { SummaryComponent } from './summary/summary.component';
+import { ClientsComponent } from './clients/clients.component';
 import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'analyze/:table', component: AnalyzeComponent, canActivate: [authGuard] },
   { path: 'clean/:table', component: CleaningComponent, canActivate: [authGuard] },
   { path: 'summary', component: SummaryComponent, canActivate: [authGuard] },
+  { path: 'clients/:id', component: ClientsComponent, canActivate: [authGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];

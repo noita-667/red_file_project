@@ -1,0 +1,78 @@
+<div class="window-page">
+  <div class="window-box">
+    <div class="window-header"></div>
+
+    <div class="window-content text-center">
+
+      <p *ngIf="loading" class="mt-4 text-muted">Chargement...</p>
+      <p *ngIf="error" class="mt-4 text-danger small">{{ error }}</p>
+
+      <div *ngIf="detail" class="text-start">
+
+        <!-- Infos client -->
+        <h1 class="window-title text-center">{{ detail.client.nom }}</h1>
+        <div class="border rounded p-3 mb-4 mt-3">
+          <p class="mb-1"><strong>ID :</strong> {{ detail.client.id }}</p>
+          <p class="mb-1"><strong>Âge :</strong> {{ detail.client.age ?? 'Non renseigné' }}</p>
+          <p class="mb-1"><strong>Email :</strong> {{ detail.client.email ?? 'Non renseigné' }}</p>
+          <p class="mb-1"><strong>Ville :</strong> {{ detail.client.ville ?? 'Non renseignée' }}</p>
+          <p class="mb-0"><strong>Téléphone :</strong> {{ detail.client.telephone ?? 'Non renseigné' }}</p>
+        </div>
+
+        <!-- Ventes -->
+        <h2 class="window-subtitle">Ventes ({{ detail.ventes.length }})</h2>
+        <p *ngIf="detail.ventes.length === 0" class="text-muted small">Aucune vente.</p>
+        <table *ngIf="detail.ventes.length > 0" class="table table-sm table-bordered mt-2 mb-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Produit</th>
+              <th>Quantité</th>
+              <th>Prix</th>
+              <th>Code promo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of detail.ventes">
+              <td>{{ v.id }}</td>
+              <td>{{ v.produit }}</td>
+              <td>{{ v.quantite ?? '—' }}</td>
+              <td>{{ v.prix != null ? (v.prix + ' €') : '—' }}</td>
+              <td>{{ v.code_promo ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Transactions -->
+        <h2 class="window-subtitle">Transactions ({{ detail.transactions.length }})</h2>
+        <p *ngIf="detail.transactions.length === 0" class="text-muted small">Aucune transaction.</p>
+        <table *ngIf="detail.transactions.length > 0" class="table table-sm table-bordered mt-2 mb-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Montant</th>
+              <th>Statut</th>
+              <th>Date</th>
+              <th>Référence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of detail.transactions">
+              <td>{{ t.id }}</td>
+              <td>{{ t.montant != null ? (t.montant + ' €') : '—' }}</td>
+              <td>{{ t.statut ?? '—' }}</td>
+              <td>{{ t.date_op ?? '—' }}</td>
+              <td>{{ t.reference }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <button class="btn btn-outline-secondary mt-2" (click)="retourTables()">
+        ← Retour aux tables
+      </button>
+
+    </div>
+  </div>
+</div>
