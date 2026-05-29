@@ -37,4 +37,8 @@ export class TablesComponent implements OnInit {
   voirCleaning(table: string) {
     this.router.navigate(['/clean', table]);
   }
+
+  voirResume() {
+    this.router.navigate(['/summary']);
+  }
 }

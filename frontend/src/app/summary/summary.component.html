@@ -1,0 +1,64 @@
+<div class="window-page">
+  <div class="window-box">
+    <div class="window-header"></div>
+
+    <div class="window-content text-center">
+      <h1 class="window-title">Résumé global</h1>
+
+      <p *ngIf="loading" class="mt-4 text-muted">Analyse de toutes les tables...</p>
+      <p *ngIf="error" class="mt-4 text-danger small">{{ error }}</p>
+
+      <div *ngIf="!loading && !error">
+
+        <!-- Une carte par table -->
+        <div *ngFor="let t of tables" class="text-start border rounded p-3 mb-3 mt-3">
+
+          <div class="mb-2">
+            <strong>{{ t }}</strong>
+          </div>
+
+          <!-- Doublons -->
+          <p class="small mb-1">
+            <span [class.text-warning]="duplicates(t) > 0" [class.text-success]="duplicates(t) === 0">
+              Doublons : {{ duplicates(t) === 0 ? 'aucun ✓' : duplicates(t) }}
+            </span>
+          </p>
+
+          <!-- Valeurs manquantes -->
+          <p class="small mb-1" *ngIf="missingEntries(t).length === 0" class="text-success small">
+            Valeurs manquantes : aucune ✓
+          </p>
+          <div *ngIf="missingEntries(t).length > 0" class="small mb-1">
+            Valeurs manquantes :
+            <span *ngFor="let e of missingEntries(t); let last = last">
+              <strong>{{ e[0] }}</strong> ({{ e[1] }})<span *ngIf="!last">, </span>
+            </span>
+          </div>
+
+          <!-- Anomalies -->
+          <p class="small mb-0" *ngIf="anomalyEntries(t).length === 0">
+            Anomalies de types : <span class="text-success">aucune ✓</span>
+          </p>
+          <div *ngIf="anomalyEntries(t).length > 0" class="small mb-0">
+            Anomalies :
+            <span *ngFor="let e of anomalyEntries(t); let last = last">
+              <strong>{{ e[0] }}</strong> → {{ e[1].join(', ') }}<span *ngIf="!last"> | </span>
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Aucune table -->
+        <p *ngIf="tables.length === 0" class="text-muted mt-4">Aucune table disponible.</p>
+
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-outline-secondary" (click)="retourTables()">
+          ← Retour aux tables
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
